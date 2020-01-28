@@ -1,0 +1,86 @@
+x=Input(shape=(32,32,3))
+
+branch_a = Conv2D(128, (1,1), activation='elu', strides=2)(x)
+branch_a = BatchNormalization()(branch_a)
+branch_a = Flatten()(branch_a)
+
+
+branch_b = Conv2D(64, (5,5), activation='elu', padding='same')(x)
+branch_b = BatchNormalization()(branch_b)
+branch_b = AveragePooling2D(2,2)(branch_b)
+brancn_b = Conv2D(64, (4,4), activation='elu', padding='same')(branch_b)
+branch_b = BatchNormalization()(branch_b)
+branch_b = Flatten()(branch_b)
+
+branch_c = Conv2D(32, (4,4), activation='elu', padding='same')(x)
+branch_c = BatchNormalization()(branch_c)
+branch_c = AveragePooling2D(3,3)(branch_c)
+#branch_c = Conv2D(64, (1,1), activation='elu', strides=2)(branch_c)
+
+branch_c = Conv2D(64, (3,3), activation='elu', padding='same')(branch_c)
+branch_c = BatchNormalization()(branch_c)
+branch_c = Flatten()(branch_c)
+
+branch_d = Conv2D(32, (3,3), activation='elu', padding='same')(x)
+branch_d = BatchNormalization()(branch_d)
+branch_d = Conv2D(32, (3,3), activation='elu', padding='same')(branch_d)
+branch_d = BatchNormalization()(branch_d)
+branch_d = MaxPooling2D(2,2)(branch_d)
+branch_d = Dropout(0.2)(branch_d)
+
+branch_d = Conv2D(64, (3,3), activation='elu', )(branch_d)
+branch_d = BatchNormalization()(branch_d)
+branch_d = Conv2D(64, (3,3), activation='elu', padding='same')(branch_d)
+branch_d = BatchNormalization()(branch_d)
+branch_d = MaxPooling2D(2,2)(branch_d)
+branch_d = Dropout(0.3)(branch_d)
+
+branch_d=Conv2D(128, (3,3), activation='elu')(branch_d)
+branch_d = BatchNormalization()(branch_d)
+branch_d=Conv2D(128, (3,3), activation='elu', padding='same')(branch_d)
+branch_d = BatchNormalization()(branch_d)
+branch_d = Dropout(0.4)(branch_d)
+branch_d = Flatten()(branch_d)
+
+branch_e = Conv2D(32, (3,3), activation='elu', padding='same')(x)
+branch_e = BatchNormalization()(branch_e)
+branch_e = Conv2D(32, (3,3), activation='elu', padding='same')(branch_e)
+branch_e = BatchNormalization()(branch_e)
+branch_e = MaxPooling2D(2,2)(branch_e)
+branch_e = Dropout(0.2)(branch_e)
+
+branch_e = Conv2D(64, (3,3), activation='elu', padding='same' )(branch_e)
+branch_e = BatchNormalization()(branch_e)
+branch_e = Conv2D(64, (3,3), activation='elu', padding='same')(branch_e)
+branch_e = BatchNormalization()(branch_e)
+branch_e = MaxPooling2D(2,2)(branch_e)
+branch_e = Dropout(0.3)(branch_e)
+
+branch_e=Conv2D(128, (3,3), activation='elu', padding='same')(branch_e)
+branch_e = BatchNormalization()(branch_e)
+branch_e =Conv2D(128, (3,3), activation='elu', padding='same')(branch_e)
+branch_e = BatchNormalization()(branch_e)
+branch_e = Dropout(0.4)(branch_e)
+
+branch_e = Conv2D(64, (3,3), activation='elu', padding='same' )(branch_e)
+branch_e = BatchNormalization()(branch_e)
+branch_e = Conv2D(64, (3,3), activation='elu', padding='same')(branch_e)
+branch_e = BatchNormalization()(branch_e)
+branch_e = MaxPooling2D(2,2)(branch_e)
+branch_e = Dropout(0.5)(branch_e)
+
+branch_e = Conv2D(32, (3,3), activation='elu', padding='same' )(branch_e)
+branch_e = BatchNormalization()(branch_e)
+branch_e = Conv2D(32, (3,3), activation='elu', padding='same')(branch_e)
+branch_e = BatchNormalization()(branch_e)
+branch_e = Conv2D(16, (3,3), activation='elu', padding='same' )(branch_e)
+branch_e = BatchNormalization()(branch_e)
+branch_e = Conv2D(16, (3,3), activation='elu', padding='same')(branch_e)
+branch_e = BatchNormalization()(branch_e)
+branch_e = Flatten()(branch_e)
+
+output = layers.concatenate([ branch_b, branch_c, branch_d], axis=-1)
+
+predict = Dense(10, activation='softmax')(output)
+
+model=Model(x, predict)
